@@ -21,14 +21,16 @@ To tackle these challenges, Group Relative Policy Optimization (GRPO) was introd
 
 Specifically, for each question $q$, GRPO samples a group of outputs ${o_1,o_2,…,o_G}$ from the old policy $π_{θ_{old}}$​​ and optimizes the policy model $π_θ$ by maximizing the following GRPO objective function:
 
+---
+layout: post
+mathjax: true
+---
 $$
-J_{\text{GRPO}}(\theta) =
-\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|}
+J_{\text{GRPO}}(\theta) =\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|}
 \left[
 \min \left( \frac{\pi_{\theta}(o_{i,t} | q, o_{i, < t})}{\pi_{\theta_{\text{old}}}(o_{i,t} | q, o_{i, < t})} \hat{A}_{i,t}, 
 \text{clip} \left( \frac{\pi_{\theta}(o_{i,t} | q, o_{i, < t})}{\pi_{\theta_{\text{old}}}(o_{i,t} | q, o_{i, < t})}, 1 - \epsilon, 1 + \epsilon \right) \hat{A}_{i,t} \right)- \beta D_{\text{KL}} [\pi_{\theta} \| \pi_{\text{ref}}] 
-\right] (1)
-$$, where:
+\right] (1)$$, where:
 -   $G$ is the number of generations per prompt.
 -   $o_i$​ represents the $i$-th generated output, and $∣o_i∣$ denotes the number of tokens in $o_i$​.
 -   $q$ is the given prompt.

@@ -26,9 +26,8 @@ J_{\text{GRPO}}(\theta) =
 \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|}
 \left[
 \min \left( \frac{\pi_{\theta}(o_{i,t} | q, o_{i, < t})}{\pi_{\theta_{\text{old}}}(o_{i,t} | q, o_{i, < t})} \hat{A}_{i,t}, 
-\text{clip} \left( \frac{\pi_{\theta}(o_{i,t} | q, o_{i, < t})}{\pi_{\theta_{\text{old}}}(o_{i,t} | q, o_{i, < t})}, 1 - \epsilon, 1 + \epsilon \right) \hat{A}_{i,t} 
-\right) - \beta D_{\text{KL}} [\pi_{\theta} \| \pi_{\text{ref}}] 
-\right](1)
+\text{clip} \left( \frac{\pi_{\theta}(o_{i,t} | q, o_{i, < t})}{\pi_{\theta_{\text{old}}}(o_{i,t} | q, o_{i, < t})}, 1 - \epsilon, 1 + \epsilon \right) \hat{A}_{i,t} \right)- \beta D_{\text{KL}} [\pi_{\theta} \| \pi_{\text{ref}}] 
+\right] (1)
 $$, where:
 -   $G$ is the number of generations per prompt.
 -   $o_i$​ represents the $i$-th generated output, and $∣o_i∣$ denotes the number of tokens in $o_i$​.

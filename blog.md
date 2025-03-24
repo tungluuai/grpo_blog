@@ -177,5 +177,5 @@ We present several inference results from the Qwen2.5 14B model, which has been 
 
 ![response_2](response_2.jpg)
 
-## 7) Resources
+## 7) Resource
 Fine-tuning a model with full parameters based on GRPO requires substantial GPU resources. For a model with approximately 14B parameters, we need 3 GPUs for training and 1 GPU for vLLM to generate outputs. Therefore, <marketing...>

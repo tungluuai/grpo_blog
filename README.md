@@ -21,10 +21,6 @@ To tackle these challenges, Group Relative Policy Optimization (GRPO) was introd
 
 Specifically, for each question $q$, GRPO samples a group of outputs ${o_1,o_2,…,o_G}$ from the old policy $π_{θ_{old}}$​​ and optimizes the policy model $π_θ$ by maximizing the following GRPO objective function:
 
----
-layout: post
-mathjax: true
----
 $$
 J_{\text{GRPO}}(\theta) =\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|}
 \left[
@@ -40,9 +36,7 @@ J_{\text{GRPO}}(\theta) =\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{
 -   $\hat{A}_{i,t}$​ is the estimated advantage for the $t$-th token in the $i$-th generated output.
 
 To simplify, we ignore the gradient, leading to $π_θ=π_{θ_{old}}$. The objective function is equivalent to:
-$$
-J_{\text{GRPO}}(\theta) =- \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|}
-\beta D_{\text{KL}} [\pi_{\theta} \| \pi_{\text{ref}}] (2)
+![Equation](https://latex.codecogs.com/png.latex?J_{\text{GRPO}}(\theta) = J_{\text{GRPO}}(\theta) =- \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|}\beta D_{\text{KL}} [\pi_{\theta} \| \pi_{\text{ref}}] (2)
 $$
 You can find the detail proof in [GRPO-Loss-Discussion](https://github.com/huggingface/open-r1/issues/239). With Equation (2), you can see that at the beginning of training, the objective function starts at 0 and then gradually increases. Note that the Kullback-Leibler divergence approaches infinity as the distributions of $π_θ$ and $π_{ref}$​ become more different.
 

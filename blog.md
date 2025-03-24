@@ -172,6 +172,10 @@ if __name__ == "__main__":
     main()
 ```
 We present several inference results from the Qwen2.5 14B model, which has been fine-tuned on our custom dataset after 3000 steps. We pose a series of mathematical questions to challenge the model, and the results demonstrate detailed and accurate responses.
+
 ![response_1](response_1.jpg)
+
 ![response_2](response_2.jpg)
 
+## 7) Resources
+Fine-tuning a model with full parameters based on GRPO requires substantial GPU resources. For a model with approximately 14B parameters, we need 3 GPUs for training and 1 GPU for vLLM to generate outputs. Therefore, <marketing...>

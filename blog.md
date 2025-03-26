@@ -115,8 +115,11 @@ For easier modifications, we refer to the source code at: [GRPO-Script](https://
 		- `"none"`: not offloading.
 		
 		`num_processes`: specifies the number of parallel processes used for distributed training or data processing. If we need `n` GPUs for sampling with vLLM, then `num_processes` should be set to the total number of GPUs minus `n`.
-	- You can refer to the ways to select specific model, dataset from Hugging Face Hub or local machine, and configure the training hyperparameters based on [this configuration](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/receipes/grpo-qwen-2.5-3b-deepseek-r1-countdown.yaml). 
-	- Finally, perform distributed training with multiple GPUs based on this command line:
+- You can refer to the ways to select specific model, dataset from Hugging Face Hub or local machine, and configure the training hyperparameters based on [this configuration](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/receipes/grpo-qwen-2.5-3b-deepseek-r1-countdown.yaml).
+- 
+<u>Step 4:</u> Fine-tuning LLMs.
+
+- Finally, perform distributed training with multiple GPUs based on this command line:
 	```
 	accelerate  launch  --num_processes  3  \
 

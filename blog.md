@@ -21,6 +21,7 @@ To tackle these challenges, Group Relative Policy Optimization (GRPO) was introd
 
 Specifically, for each question $q$, GRPO samples a group of outputs ${o_1,o_2,…,o_G}$ from the old policy $π_{θ_{old}}$​​ and optimizes the policy model $π_θ$ by maximizing the following GRPO objective function:
 ![obj_loss_1](obj_loss_1.png)
+
 , where:
 -   $G$ is the number of generations per prompt.
 -   $o_i$​ represents the $i$-th generated output, and $∣o_i∣$ denotes the number of tokens in $o_i$​.
@@ -32,6 +33,7 @@ Specifically, for each question $q$, GRPO samples a group of outputs ${o_1,o_2,�
 
 To simplify, we ignore the gradient, leading to $π_θ=π_{θ_{old}}$. The objective function is equivalent to:
 ![obj_loss_2](obj_loss_2.png)
+
 You can find the detail proof in [GRPO-Loss-Discussion](https://github.com/huggingface/open-r1/issues/239). With Equation (2), you can see that at the beginning of training, the objective function starts at 0 and then gradually increases. Note that the Kullback-Leibler divergence approaches infinity as the distributions of $π_θ$ and $π_{ref}$​ become more different.
 
 ## 4) Reward functions

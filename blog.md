@@ -99,6 +99,7 @@ For easier modifications, we refer to the source code at: [GRPO-Script](https://
 - Finetune LLMs based on <u>GRPO Trainer</u>.
   
 <u>Step 3:</u> Set up hyperparameters.
+
 	- You can see the hyperparameters of DeepSpeed at [DeepSpeed Zero3](https://github.com/huggingface/trl/blob/main/examples/accelerate_configs/deepspeed_zero3.yaml). DeepSpeed is an open-source deep learning optimization library developed to improve the efficiency, scalability, and performance of training large-scale AI models. It provides features like memory optimization, mixed-precision training, zero redundancy optimizer (ZeRO), and efficient distributed training, enabling faster and more cost-effective model training on large datasets.
  
 	`offload_optimizer_device`:  Specifies where to offload the optimizer states. 

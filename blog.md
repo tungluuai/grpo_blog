@@ -45,6 +45,7 @@ The reward serves as the foundation for the training signal, guiding the optimiz
 ## 5) Step-by-step to reproduce "aha" moment
 
 In this section, we will guide you through the setup for fine-tuning any LLMs with reasoning styling similar to DeepSeek R1.
+
 <u>Step 1:</u> Set up environment.
 You should set up a Conda environment or configure a Docker image with Python 3.10, then install the following libraries:
 ```
@@ -61,12 +62,37 @@ For easier modifications, you can refer to the source code at: [GRPO-Script](htt
 -   Reward functions: Contains two functions corresponding to Section 4. These functions return specific values within the range $[0.0, 1.0]$. However, you can modify them to with any specific range and design additional reward functions as needed.
     
     -   Format reward: Ensure that inferred content is enclosed within `<think>...</think>` tags and the final answer is within `<answer>...</answer>` tags.
-        
+  	```
+   	regex = r"^Let me solve this step by step\.\n<think>([^<]*(?:<(?!/?think>)[^<]*)*)<\/think>\n<answer>([^<]*)<\/answer>\Z"
+        match = re.search(regex, completion, re.DOTALL) 
+
+	if match is None or len(match.groups()) != 2:
+            rewards.append(0.0)
+        else:
+            rewards.append(1.0)
+      except Exception:
+        rewards.append(0.0)
+   	```
     -   Accuracy reward: Require the response to follow the correct format and compare the answer with the target.
+      	```
+       	try:
+            answer_regex = r"<answer>(.*?)<\/answer>"
+            answer_match = re.findall(answer_regex, completion)
+            if len(answer_match) == 1:
+                if answer_match[0] == choice:
+                    rewards.append(1.0)
+            else:
+                rewards.append(0.0) 
+        except Exception:
+                # If evaluation fails, reward is 0
+                rewards.append(0.0) 
+       	```
         
 - Finetune LLMs based on <u>GRPO Trainer</u>.
+  
 <u>Step 3:</u> Set up hyperparameters.
 	- You can see the hyperparameters of DeepSpeed at [DeepSpeed Zero3](https://github.com/huggingface/trl/blob/main/examples/accelerate_configs/deepspeed_zero3.yaml). DeepSpeed is an open-source deep learning optimization library developed to improve the efficiency, scalability, and performance of training large-scale AI models. It provides features like memory optimization, mixed-precision training, zero redundancy optimizer (ZeRO), and efficient distributed training, enabling faster and more cost-effective model training on large datasets.
+ 
 	`offload_optimizer_device`:  Specifies where to offload the optimizer states. 
 	
 		- `"cpu"`: Moves optimizer states to CPU memory. 
@@ -87,25 +113,30 @@ After fine-tuning the model, you can create a simple chatbot using Gradio based 
 ```
 from vllm import LLM, SamplingParams
 from transformers import AutoTokenizer
+
 import argparse
+
 import gradio as gr
+
 from functools import partial
 
+import random
+
 def get_input(question):
-    _input = [
-        {
-            "role": "system",
-            "content": "You are a helpful assistant. Please reason step by step, and put your final answer in <answer> </answer> tags."
+    list_choices = ['A', 'B', 'C', 'D']
+    random_choice = random.choice(list_choices)
+    _input = [{
+        "role": "system",
+        "content": "You are a helpful assistant. Please reason step by step in Vietnamese, and put your final answer in <answer> </answer> tags. The answer could be a one of [A, B, C, D]."
         },
         { 
-            "role": "user",
-            "content": f"{question}. Think step by step inside <think> </think> tags. And return the final equation in <answer> </answer> tags."
+        "role": "user",
+        "content": f"{question}. Think step by step in Vietnamese inside <think> </think> tags. And return the final equation in <answer> </answer> tags, for example <answer>{random_choice}</answer>."
         },
         {
-            "role": "assistant",
-            "content": "Let me solve this step by step.\n<think>"
-        }
-    ]
+        "role": "assistant",
+        "content": "Let me solve this step by step.\n<think>"
+        }]
     return _input
 
 def _inference(question, tokenizer, llm, sampling_params):
@@ -116,21 +147,21 @@ def _inference(question, tokenizer, llm, sampling_params):
     
     output = llm.generate([prompt], sampling_params=sampling_params)
     
-    return "Let me solve this step by step.\n<think>" + output[0].outputs[0].text
+    return "<think>" + output[0].outputs[0].text
 
-def chatbot_response(message, history, tokenizer, llm, sampling_params):
+def chatbot_response(message, tokenizer, llm, sampling_params):
     response = _inference(message, tokenizer, llm, sampling_params)
-    history.append((message, response))
     
-    return history
+    return response
 
 def main():
-    parser = argparse.ArgumentParser(description="Load model checkpoint.")
+    parser = argparse.ArgumentParser(description="Process model checkpoint and dataset paths.")
     parser.add_argument(
         "--checkpoint_path",
         type=str,
-        default="runs/qwen-2.5-14b-r1/checkpoint-3000",
-        help="Path to the model checkpoint.")
+        default="/network-volume/deepseek/runs/qwen-2.5-14b-r1-vmlu/checkpoint-3000",
+        help="Path to the model checkpoint."
+    )
 
     args = parser.parse_args()
 
@@ -145,30 +176,43 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
             
     llm = LLM(model=args.checkpoint_path)
+
     sampling_params = SamplingParams(temperature=0.0,
                                         max_tokens=1024,
                                         stop_token_ids=None)
-    with gr.Blocks(theme=gr.themes.Soft()) as demo:
-        gr.Markdown("# 🤖 GreenNode AI Chatbot")
-        chatbot = gr.Chatbot(height=800)
-        msg = gr.Textbox(label="Enter your message:")
-        clear_btn = gr.Button("Clear history")
+    
+    iface = gr.Interface(
+        fn=partial(chatbot_response, tokenizer=tokenizer, llm=llm, sampling_params=sampling_params),
+        inputs=gr.Textbox(
+            label="Your Message", 
+            placeholder="Type your message here...", 
+            lines=1, 
+            max_length=2000,
+            elem_id="user-input-box"
+        ),
+        outputs=gr.Textbox(
+            label="Response", 
+            placeholder="Chatbot's response will appear here...", 
+            lines=3, 
+            max_length=5000,
+            elem_id="chatbot-response-box"
+        ),
+        title="GreenNode AI Chatbot",
+        description="Welcome to GreenNode AI Chatbot! Feel free to ask me anything.",
+        theme="huggingface",  
+     )
 
-        def clear_chat():
-            return []
-            
-        msg.submit(partial(chatbot_response, tokenizer=tokenizer, llm=llm, sampling_params=sampling_params), [msg, chatbot], chatbot)
-        clear_btn.click(clear_chat, None, chatbot)
-    demo.launch(share=True)
+    iface.launch(share=True)
+
 if __name__ == "__main__":
     main()
 ```
 We present several inference results from the Qwen2.5 14B model, which has been fine-tuned on our custom dataset after 3000 steps. We pose a series of mathematical questions to challenge the model, and the results demonstrate detailed and accurate responses.
 
 
-![response_1](response_1.jpg)
+![response_1](response_1.png)
 
-![response_2](response_2.jpg)
+![response_2](response_2.png)
 
 ## 7) Resource
 Fine-tuning a model with full parameters based on GRPO requires substantial GPU resources. For a model with approximately 14B parameters, we need 3 GPUs for training and 1 GPU for vLLM to generate outputs. Therefore, <marketing...>

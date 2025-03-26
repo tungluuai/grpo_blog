@@ -127,7 +127,7 @@ For easier modifications, we refer to the source code at: [GRPO-Script](https://
 
 	--config_file  configs/accelerate_configs/deepspeed_zero3.yaml  scripts/vnhsge_run_r1_grpo.py  \
 
-	--config  receipes/grpo-qwen2.5-7b-deepseek-r1-vmlu.yaml
+	--config  receipes/grpo-qwen2.5-14b-deepseek-r1-vmlu.yaml
 	```
 ## 5) Experiments
 ![experiment](experiment.png)

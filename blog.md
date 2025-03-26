@@ -104,15 +104,15 @@ For easier modifications, we refer to the source code at: [GRPO-Script](https://
  
 	`offload_optimizer_device`:  Specifies where to offload the optimizer states. 
 	
-		- `cpu`: Moves optimizer states to CPU memory. 
-		- `nvme`: Moves optimizer states to NVMe storage for even lower GPU memory usage.
-		- `none`: not offloading.
+	- `cpu`: Moves optimizer states to CPU memory. 
+	- `nvme`: Moves optimizer states to NVMe storage for even lower GPU memory usage.
+	- `none`: not offloading.
 
 	`offload_param_device`: Specifies where to offload the model parameters.
 		
-		- `cpu`: Offloads model parameters to CPU, reducing GPU memory consumption.
-		- `nvme`: Stores parameters on NVMe for extreme memory optimization, but with potential latency trade-offs.
-		- `none`: not offloading.
+	- `cpu`: Offloads model parameters to CPU, reducing GPU memory consumption.
+	- `nvme`: Stores parameters on NVMe for extreme memory optimization, but with potential latency trade-offs.
+	- `none`: not offloading.
 		
 	`num_processes`: specifies the number of parallel processes used for distributed training or data processing. If we need `n` GPUs for sampling with vLLM, then `num_processes` should be set to the total number of GPUs minus `n`.
 - You can refer to the ways to select specific model, dataset from Hugging Face Hub or local machine, and configure the training hyperparameters based on [this configuration](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/receipes/grpo-qwen-2.5-3b-deepseek-r1-countdown.yaml).

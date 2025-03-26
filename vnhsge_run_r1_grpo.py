@@ -160,11 +160,11 @@ def grpo_function(
         random_choice = random.choice(list_choices)
         r1_prefix = [{
             "role": "system",
-            "content": "You are a helpful assistant. Please reason step by step, and put your final answer in <answer> </answer> tags. The answer could be a one of [A, B, C, D]."
+            "content": "You are a helpful assistant. Please reason step by step in Vietnamese, and put your final answer in <answer> </answer> tags. The answer could be a one of [A, B, C, D]."
           },
           { 
             "role": "user",
-            "content": f"{instruction}. Think step by step inside <think> </think> tags. And return the final equation in <answer> </answer> tags, for example <answer>{random_choice}</answer>."
+            "content": f"{instruction}. Think step by step in Vietnamese and put inside <think> </think> tags. And return the final equation in <answer> </answer> tags, for example <answer>{random_choice}</answer>."
           },
           {
             "role": "assistant",

@@ -131,7 +131,7 @@ For easier modifications, we refer to the source code at: [GRPO-Script](https://
 	```
 ## 5) Experiments
 ![experiment](experiment.png)
-We present some basic analysis after fine-tuning for approximately 4 epochs. The results show that the responses closely adhere to the desired format, with a fluctuation range from 0.98 to 0.99. The accuracy of the responses improves as the score increases from below 0.7 to 0.83. The loss function starts at 0 and gradually increases, as analyzed in Section 3.
+We present some basic analysis after fine-tuning for approximately 4 epochs. The results show that the responses closely adhere to the desired format, with a fluctuation range from 0.98 to 0.99. The accuracy of the responses improves as the score increases from below 0.75 to 0.83. The loss function starts at 0 and gradually increases, as analyzed in Section 3.
 ## 6) Create your Chatbot
 After fine-tuning the model, you can create a simple chatbot using Gradio based on the sample code below. 🤗
 ```

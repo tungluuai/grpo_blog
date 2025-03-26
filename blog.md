@@ -231,7 +231,7 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-We present several inference results from the Qwen2.5 14B model, which has been fine-tuned on our custom dataset after 3000 steps. We pose a series of mathematical questions to challenge the model, and the results demonstrate detailed and accurate responses.
+We present several inference results from the Qwen2.5 14B model, which has been fine-tuned on our custom dataset after 3000 steps. The results demonstrate detailed reasoning and accurate answers.
 
 
 ![response_1](response_1.png)

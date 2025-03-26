@@ -155,7 +155,7 @@ def get_input(question):
         },
         { 
         "role": "user",
-        "content": f"{question}. Think step by step in Vietnamese inside <think> </think> tags. And return the final equation in <answer> </answer> tags, for example <answer>{random_choice}</answer>."
+        "content": f"{question}. Think step by step in Vietnamese and put inside <think> </think> tags. And return the final equation in <answer> </answer> tags, for example <answer>{random_choice}</answer>."
         },
         {
         "role": "assistant",

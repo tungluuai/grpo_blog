@@ -1,3 +1,4 @@
+
 # An easy path to capturing Group Relative Policy Optimization
 
 Earlier this year, the release of **DeepSeek-R1** sent shockwaves through the AI industry. This open-source model demonstrated reasoning capabilities on par with OpenAI's **GPT-4-o**, leveraging **Group Relative Policy Optimization (GRPO)** and a reinforcement learning-driven multi-stage training approach. Not only did DeepSeek unveil the model itself, but they also published a research paper detailing the techniques behind its development.
@@ -56,8 +57,15 @@ pip install "vllm==0.7.0"
 pip install gradio
 ```
 <u>Step 2:</u> Training Script. 
-For easier modifications, you can refer to the source code at: [GRPO-Script](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/scripts/run_r1_grpo.py). This script includes the following components:
--   Dataset: Load dataset → Apply conversation template → Tokenize → Split dataset.
+For easier modifications, we refer to the source code at: [GRPO-Script](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/scripts/run_r1_grpo.py), then modify it to adapt the VNHSGE dataset. This dataset is for the Vietnamese High School Graduation, with multiple-choice questions and answers A, B, C, or D. You can view the source code for VNHSGE here: [VNHSGE_r1_GRPO](https://github.com/tungluuai/grpo_blog/blob/main/vnhsge_run_r1_grpo.py). This script includes the following components:
+-   Dataset: 
+	- Load dataset: Merge all the JSON files (currently there are 3 domains available), and temporarily name it `merge_vnhsge.json`. Then, load the dataset from the local machine.
+	```
+	dataset  =  load_dataset("json", data_files=script_args.dataset_id_or_path)
+	```
+	-  Apply conversation template (using `generate_r1_prompt` function)
+	-  Tokenize 
+	-  Split dataset (train/test).
     
 -   Reward functions: Contains two functions corresponding to Section 4. These functions return specific values within the range $[0.0, 1.0]$. However, you can modify them to with any specific range and design additional reward functions as needed.
     
@@ -106,8 +114,17 @@ For easier modifications, you can refer to the source code at: [GRPO-Script](htt
 		- `"none"`: not offloading.
 		
 		`num_processes`: specifies the number of parallel processes used for distributed training or data processing. If we need `n` GPUs for sampling with vLLM, then `num_processes` should be set to the total number of GPUs minus `n`.
-	- You can refer to the ways to select specific model, dataset from Hugging Face Hub, and configure the training hyperparameters based on [this configuration](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/receipes/grpo-qwen-2.5-3b-deepseek-r1-countdown.yaml). 
-		
+	- You can refer to the ways to select specific model, dataset from Hugging Face Hub or local machine, and configure the training hyperparameters based on [this configuration](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/receipes/grpo-qwen-2.5-3b-deepseek-r1-countdown.yaml). 
+	- Finally, perform distributed training with multiple GPUs based on this command line:
+	```
+	accelerate  launch  --num_processes  3  \
+
+	--main_process_port  29504  \
+
+	--config_file  configs/accelerate_configs/deepspeed_zero3.yaml  scripts/vnhsge_run_r1_grpo.py  \
+
+	--config  receipes/grpo-qwen2.5-7b-deepseek-r1-vmlu.yaml
+	```
 ## 6) Create your Chatbot
 After fine-tuning the model, you can create a simple chatbot using Gradio based on the sample code below. 🤗
 ```

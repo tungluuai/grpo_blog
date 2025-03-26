@@ -116,8 +116,8 @@ For easier modifications, we refer to the source code at: [GRPO-Script](https://
 		
 		`num_processes`: specifies the number of parallel processes used for distributed training or data processing. If we need `n` GPUs for sampling with vLLM, then `num_processes` should be set to the total number of GPUs minus `n`.
 - You can refer to the ways to select specific model, dataset from Hugging Face Hub or local machine, and configure the training hyperparameters based on [this configuration](https://github.com/philschmid/deep-learning-pytorch-huggingface/blob/main/training/receipes/grpo-qwen-2.5-3b-deepseek-r1-countdown.yaml).
-- 
-<u>Step 4:</u> Fine-tuning LLMs.
+  
+<u>Step 4:</u> Fine-tune LLMs.
 
 - Finally, perform distributed training with multiple GPUs based on this command line:
 	```
@@ -129,6 +129,9 @@ For easier modifications, we refer to the source code at: [GRPO-Script](https://
 
 	--config  receipes/grpo-qwen2.5-7b-deepseek-r1-vmlu.yaml
 	```
+## 5) Experiments
+![experiment](experiment.png)
+We present some basic analysis after fine-tuning for approximately 4 epochs. The results show that the responses closely adhere to the desired format, with a fluctuation range from 0.98 to 0.99. The accuracy of the responses improves as the score increases from below 0.7 to 0.83. The loss function starts at 0 and gradually increases, as analyzed in Section 3.
 ## 6) Create your Chatbot
 After fine-tuning the model, you can create a simple chatbot using Gradio based on the sample code below. 🤗
 ```
